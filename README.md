@@ -1,37 +1,43 @@
-# Xiaomi Grooming Pro Comb Attachment (Skin-Friendly Edition)
+# Xiaomi Grooming Pro Comb Attachment (Skin-Friendly Editions)
 
 [![Live 3D Web Demo](https://img.shields.io/badge/Live_Demo-Interactive_3D_Viewer-0284c7?style=for-the-badge&logo=three.js)](https://glotoff.github.io/xiaomi-grooming-pro-comb/)
 
-An improved replacement comb attachment for the **Xiaomi Grooming Pro Trimmer / Shaver**, engineered for comfort with rounded, skin-friendly teeth tips.
+An improved replacement comb attachment for the **Xiaomi Grooming Pro Trimmer / Shaver**, engineered for maximum comfort with skin-friendly rounded teeth tips.
 
-![Interactive 3D Viewer](images/threejs_viewer_screenshot.png)
+![Interactive 3D Viewer](images/mobile_view.png)
 
 ---
 
 ## 🌐 Live Interactive 3D Viewer
 
-Experience and inspect the 3D model directly in your browser:
+Experience, compare, and inspect both design versions directly in your browser:
 👉 **[Launch Live 3D Viewer](https://glotoff.github.io/xiaomi-grooming-pro-comb/)**
 
-*Built with Three.js & WebGL. Includes orbit controls, camera presets, surface roughness/color customizer, wireframe toggle, and turntable auto-rotation.*
+*Built with Three.js & WebGL. Includes instant switching between **Extra Rounded** and **Medium Rounded** versions, mobile bottom preset bar, camera presets, surface roughness/color customizer, wireframe toggle, and turntable auto-rotation.*
 
 ---
 
-## 💡 The Problem & The Solution
+## 💡 Two Skin-Friendly Versions Available
 
-- **The Problem**: The original 3D model had comb teeth that terminated in flat, sharp-edged chisels (0.67 mm x 0.47 mm) with 90° perimeter corners. When dragged across facial or neck skin at trimming angles, these sharp points catch and cause skin irritation.
-- **The Solution**: All 5 comb teeth tips have been reshaped with continuous, smooth bullnose domes (R ≈ 0.85 mm). The teeth now glide effortlessly across the skin without scratching.
-- **Dimensional Fidelity**: All functional retention snap clips, guide rails, and comb slot spacings remain 100% true to the original factory specifications.
+| Version | Tip Radius | Characteristics | Best For |
+| :--- | :--- | :--- | :--- |
+| **Extra Rounded (Pearl Tip)** | **R ≈ 1.25 mm** | Pronounced, bulbous comfort dome; maximum glide; 0% chance of scratching even with firm pressure | Sensitive facial/neck skin, close body grooming, ultra-comfort |
+| **Medium Rounded (Bullnose)** | **R ≈ 0.85 mm** | Balanced bullnose curve; smooth glide; matches standard commercial comb profile | Standard beard & hair trimming, crisp cutting edge entry |
+
+*Both versions maintain 100% factory dimensional accuracy for the snap-fit retention prongs, side guide rails, and tooth slot spacing.*
 
 ---
 
-## 📸 3D Renders
+## 📸 3D Renders Comparison
 
-### Close-up: Rounded Bullnose Tips
-![Close-up of Smooth Bullnose Tips](images/render_teeth_closeup.png)
+### Extra Rounded (R ≈ 1.25 mm)
+![Extra Rounded Close-up](images/render_extra_rounded_closeup.png)
 
-### Full Model Overview
-![Full Isometric View](images/render_full_isometric.png)
+### Medium Rounded (R ≈ 0.85 mm)
+![Medium Rounded Close-up](images/render_teeth_closeup.png)
+
+### Original Sharp Chisel Tips (Unmodified Reference)
+![Original Sharp Chisel Tips](images/render_teeth_closeup.png)
 
 ---
 
@@ -39,11 +45,13 @@ Experience and inspect the 3D model directly in your browser:
 
 | File | Format | Description |
 | :--- | :--- | :--- |
-| **`Xiaomi_Grooming_Pro_Comb_Rounded.3mf`** | 3MF | Recommended print file with full mesh data (OrcaSlicer / Bambu Studio / PrusaSlicer) |
-| **`Xiaomi_Grooming_Pro_Comb_Rounded.stl`** | STL | High-resolution watertight solid mesh (59,286 facets) |
-| **`Xiaomi_Grooming_Pro_Comb.3mf`** | 3MF | Original unmodified comb model for reference |
-| **`freecad-Unnamed1.FCStd`** | FCStd | FreeCAD project containing the parametric B-rep Solid source |
-| **`index.html`** | HTML | Self-contained Three.js interactive 3D web viewer (hosted via GitHub Pages) |
+| **`Xiaomi_Grooming_Pro_Comb_Extra_Rounded.3mf`** | 3MF | **[NEW]** Extra Rounded (R 1.25mm) print file for OrcaSlicer / Bambu Studio |
+| **`Xiaomi_Grooming_Pro_Comb_Extra_Rounded.stl`** | STL | **[NEW]** Extra Rounded high-resolution solid mesh (61,990 facets) |
+| **`Xiaomi_Grooming_Pro_Comb_Rounded.3mf`** | 3MF | Medium Rounded (R 0.85mm) print file |
+| **`Xiaomi_Grooming_Pro_Comb_Rounded.stl`** | STL | Medium Rounded high-resolution solid mesh (59,286 facets) |
+| **`Xiaomi_Grooming_Pro_Comb.3mf`** | 3MF | Original factory model (unmodified reference) |
+| **`freecad-Unnamed1.FCStd`** | FCStd | FreeCAD project containing all parametric B-rep Solid models |
+| **`index.html`** | HTML | Interactive dual-version Three.js 3D web viewer (hosted via GitHub Pages) |
 
 ---
 
