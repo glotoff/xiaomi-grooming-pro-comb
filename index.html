@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Xiaomi Grooming Pro Comb - 3D Interactive Viewer</title>
   <style>
     * {
@@ -10,6 +10,8 @@
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       overflow: hidden;
@@ -18,6 +20,7 @@
       color: #e2e8f0;
       width: 100vw;
       height: 100vh;
+      touch-action: none;
     }
     #canvas-container {
       width: 100%;
@@ -26,57 +29,176 @@
       top: 0;
       left: 0;
     }
+
+    /* Top Left Header */
     .header {
       position: absolute;
-      top: 20px;
-      left: 24px;
+      top: 16px;
+      left: 16px;
       z-index: 10;
       pointer-events: none;
+      max-width: calc(100vw - 80px);
     }
     .title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.4px;
       color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .subtitle {
-      font-size: 13px;
+      font-size: 12px;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 3px;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .badge {
       background: rgba(16, 185, 129, 0.2);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.4);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 9999px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
+      white-space: nowrap;
     }
-    .panel {
+
+    /* Bottom Floating Action / Preset Bar (Always accessible, never obscures model) */
+    .bottom-bar {
       position: absolute;
-      top: 20px;
-      right: 24px;
-      background: rgba(18, 22, 32, 0.85);
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(18, 22, 32, 0.88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 16px 18px;
-      width: 290px;
-      z-index: 10;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 6px 8px;
+      border-radius: 9999px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 20;
     }
-    .panel h3 {
-      font-size: 12px;
+    .bar-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .bar-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+    }
+    .bar-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+    .bar-btn.settings-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+    }
+    .bar-btn.settings-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Floating Desktop Open Button (when panel is minimized) */
+    .btn-toggle-desktop {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(18, 22, 32, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 15;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .btn-toggle-desktop:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Main Settings & Options Panel */
+    .panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(18, 22, 32, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      padding: 16px 18px;
+      width: 280px;
+      z-index: 25;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #94a3b8;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .section-title {
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #64748b;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: 700;
     }
     .control-group {
@@ -98,19 +220,18 @@
       flex: 1;
       background: rgba(255, 255, 255, 0.08);
       color: #f1f5f9;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       padding: 7px 10px;
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
       text-align: center;
     }
     .btn:hover {
       background: rgba(255, 255, 255, 0.18);
       border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
     }
     .btn.active {
       background: #0284c7;
@@ -120,11 +241,11 @@
     .color-presets {
       display: flex;
       gap: 8px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
     .color-dot {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid rgba(255, 255, 255, 0.2);
@@ -144,35 +265,78 @@
       accent-color: #38bdf8;
       cursor: pointer;
     }
-    .instructions {
+    .help-text {
       font-size: 11px;
       color: #64748b;
-      line-height: 1.5;
+      line-height: 1.4;
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .info-bar {
-      position: absolute;
-      bottom: 20px;
-      left: 24px;
-      font-size: 12px;
-      color: #94a3b8;
-      background: rgba(18, 22, 32, 0.7);
-      backdrop-filter: blur(8px);
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      pointer-events: none;
-      z-index: 10;
+
+    /* Mobile Responsive Rules */
+    @media (max-width: 640px) {
+      .header {
+        top: 12px;
+        left: 12px;
+      }
+      .title {
+        font-size: 16px;
+      }
+      .subtitle {
+        font-size: 11px;
+      }
+      .bottom-bar {
+        bottom: 16px;
+        padding: 5px 6px;
+      }
+      .bar-btn {
+        padding: 7px 11px;
+        font-size: 12px;
+      }
+      /* On mobile, panel becomes a slide-up bottom drawer */
+      .panel {
+        top: auto;
+        bottom: 74px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        border-radius: 18px;
+        transform: translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .panel.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .btn-toggle-desktop {
+        display: none !important;
+      }
     }
+
+    @media (min-width: 641px) {
+      .panel.minimized {
+        transform: scale(0.95);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .panel.minimized ~ .btn-toggle-desktop {
+        display: flex;
+      }
+    }
+
+    /* Loader */
     .loader-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #12151c;
+      background: #0f1117;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -204,58 +368,75 @@
 <body>
   <div id="canvas-container"></div>
 
+  <!-- Header -->
   <div class="header">
     <div class="title">Xiaomi Grooming Pro Comb</div>
     <div class="subtitle">
       <span>Skin-Friendly Edition</span>
-      <span class="badge">Rounded Bullnose Tips (R 0.85mm)</span>
+      <span class="badge">Rounded Tips (R 0.85mm)</span>
     </div>
   </div>
 
-  <div class="panel">
-    <h3>Camera Presets</h3>
-    <div class="button-row">
-      <button class="btn active" id="btn-teeth">Teeth Tips</button>
-      <button class="btn" id="btn-iso">Isometric</button>
-      <button class="btn" id="btn-side">Side View</button>
+  <!-- Desktop Toggle Button (shown when panel is closed on desktop) -->
+  <button class="btn-toggle-desktop" id="btn-show-panel">
+    ⚙️ Appearance & Settings
+  </button>
+
+  <!-- Floating Bottom Preset Bar (Always visible, thumb-friendly, never hides model) -->
+  <div class="bottom-bar">
+    <button class="bar-btn active" id="btn-teeth">
+      <span>🦷</span> Teeth Tips
+    </button>
+    <button class="bar-btn" id="btn-iso">
+      <span>📐</span> Full Model
+    </button>
+    <button class="bar-btn" id="btn-side">
+      <span>🔍</span> Side
+    </button>
+    <button class="bar-btn settings-btn" id="btn-toggle-settings">
+      <span>⚙️</span>
+    </button>
+  </div>
+
+  <!-- Settings / Controls Panel -->
+  <div class="panel" id="settings-panel">
+    <div class="panel-header">
+      <h2>⚙️ Customizer</h2>
+      <button class="btn-close" id="btn-close-panel" title="Close Panel">✕</button>
     </div>
 
-    <h3>Appearance</h3>
+    <div class="section-title">Color Finish</div>
     <div class="control-group">
-      <div class="control-label">Material Color</div>
       <div class="color-presets">
         <div class="color-dot selected" style="background: #a3c4dc;" data-color="#a3c4dc" title="Soft Blue"></div>
         <div class="color-dot" style="background: #334155;" data-color="#334155" title="Dark Slate"></div>
         <div class="color-dot" style="background: #f1f5f9;" data-color="#f1f5f9" title="Clean White"></div>
-        <div class="color-dot" style="background: #f59e0b;" data-color="#f59e0b" title="Amber Orange"></div>
+        <div class="color-dot" style="background: #f59e0b;" data-color="#f59e0b" title="Amber Gold"></div>
         <div class="color-dot" style="background: #10b981;" data-color="#10b981" title="Mint Green"></div>
       </div>
     </div>
 
+    <div class="section-title">Surface Properties</div>
     <div class="control-group">
-      <div class="control-label"><span>Surface Roughness</span><span id="roughness-val">0.35</span></div>
+      <div class="control-label"><span>Roughness</span><span id="roughness-val">0.35</span></div>
       <input type="range" class="slider" id="roughness-slider" min="0" max="1" step="0.05" value="0.35">
     </div>
 
+    <div class="section-title">View Options</div>
     <div class="button-row">
       <button class="btn" id="btn-wireframe">Wireframe</button>
       <button class="btn" id="btn-autorotate">Auto Rotate</button>
     </div>
-    <button class="btn" id="btn-reset" style="width: 100%;">Reset View</button>
+    <button class="btn" id="btn-reset" style="width: 100%; margin-top: 4px;">Reset View</button>
 
-    <div class="instructions">
-      <b>Controls:</b><br>
-      • Left Click + Drag: Rotate<br>
-      • Right Click + Drag: Pan<br>
-      • Mouse Wheel: Zoom<br>
-      • Drag & Drop: Load another STL
+    <div class="help-text">
+      • Drag: Rotate scene<br>
+      • Pinch / Scroll: Zoom<br>
+      • 2-Finger Drag: Pan
     </div>
   </div>
 
-  <div class="info-bar" id="model-info">
-    59,286 Facets | 36.8 x 39.0 x 50.2 mm | 5 Bullnose Teeth
-  </div>
-
+  <!-- Loading Screen -->
   <div class="loader-overlay" id="loader">
     <div class="spinner"></div>
     <div style="margin-top: 16px; font-size: 14px; color: #94a3b8;">Loading 3D Model...</div>
@@ -272,8 +453,9 @@
     // Setup Scene, Camera, Renderer
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0f1117, 0.006);
+    scene.fog = new THREE.FogExp2(0x0f1117, 0.005);
 
+    const isMobile = window.innerWidth <= 640;
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -311,7 +493,7 @@
     rimLight.position.set(0, -60, -30);
     scene.add(rimLight);
 
-    // Subtle Ground Grid
+    // Ground Grid
     const grid = new THREE.GridHelper(140, 28, 0x38bdf8, 0x1e293b);
     grid.position.y = -26;
     scene.add(grid);
@@ -352,21 +534,28 @@
     document.getElementById('loader').style.opacity = '0';
     setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 400);
 
-    // Camera presets
+    // Camera presets - adjusted for portrait vs landscape
+    function isPortrait() {
+      return window.innerWidth < window.innerHeight;
+    }
+
     function setCameraTeethTips() {
-      camera.position.set(12, -10, 40);
+      const distMult = isPortrait() ? 1.4 : 1.0;
+      camera.position.set(12 * distMult, -10 * distMult, 40 * distMult);
       controls.target.set(0, -18, 5);
       controls.update();
     }
 
     function setCameraIsometric() {
-      camera.position.set(65, 45, 75);
+      const distMult = isPortrait() ? 1.35 : 1.0;
+      camera.position.set(65 * distMult, 45 * distMult, 75 * distMult);
       controls.target.set(0, 0, 0);
       controls.update();
     }
 
     function setCameraSide() {
-      camera.position.set(90, 0, 0);
+      const distMult = isPortrait() ? 1.35 : 1.0;
+      camera.position.set(90 * distMult, 0, 0);
       controls.target.set(0, 0, 0);
       controls.update();
     }
@@ -374,27 +563,81 @@
     // Default start view: Teeth Tips focus
     setCameraTeethTips();
 
-    // UI Listeners
-    document.getElementById('btn-teeth').addEventListener('click', (e) => {
-      setActiveButton(e.target);
-      setCameraTeethTips();
-    });
-    document.getElementById('btn-iso').addEventListener('click', (e) => {
-      setActiveButton(e.target);
-      setCameraIsometric();
-    });
-    document.getElementById('btn-side').addEventListener('click', (e) => {
-      setActiveButton(e.target);
-      setCameraSide();
-    });
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      setCameraTeethTips();
-    });
+    // UI Listeners for Quick Bottom Bar
+    const btnTeeth = document.getElementById('btn-teeth');
+    const btnIso = document.getElementById('btn-iso');
+    const btnSide = document.getElementById('btn-side');
 
-    function setActiveButton(btn) {
-      document.querySelectorAll('.button-row .btn').forEach(b => b.classList.remove('active'));
+    function setActiveBarButton(btn) {
+      [btnTeeth, btnIso, btnSide].forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
+
+    btnTeeth.addEventListener('click', () => {
+      setActiveBarButton(btnTeeth);
+      setCameraTeethTips();
+    });
+    btnIso.addEventListener('click', () => {
+      setActiveBarButton(btnIso);
+      setCameraIsometric();
+    });
+    btnSide.addEventListener('click', () => {
+      setActiveBarButton(btnSide);
+      setCameraSide();
+    });
+
+    // Panel Toggle Logic
+    const panel = document.getElementById('settings-panel');
+    const btnToggleSettings = document.getElementById('btn-toggle-settings');
+    const btnClosePanel = document.getElementById('btn-close-panel');
+    const btnShowPanel = document.getElementById('btn-show-panel');
+
+    function togglePanel() {
+      if (window.innerWidth <= 640) {
+        panel.classList.toggle('open');
+      } else {
+        panel.classList.toggle('minimized');
+      }
+    }
+
+    function closePanel() {
+      panel.classList.remove('open');
+      panel.classList.add('minimized');
+    }
+
+    function openPanel() {
+      panel.classList.add('open');
+      panel.classList.remove('minimized');
+    }
+
+    btnToggleSettings.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePanel();
+    });
+
+    btnClosePanel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePanel();
+    });
+
+    btnShowPanel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPanel();
+    });
+
+    // Click outside on mobile canvas closes panel
+    renderer.domElement.addEventListener('pointerdown', () => {
+      if (window.innerWidth <= 640 && panel.classList.contains('open')) {
+        panel.classList.remove('open');
+      }
+    });
+
+    // Reset Camera
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      setActiveBarButton(btnTeeth);
+      setCameraTeethTips();
+      if (window.innerWidth <= 640) closePanel();
+    });
 
     // Color picker
     document.querySelectorAll('.color-dot').forEach(dot => {
@@ -432,29 +675,7 @@
       btnAutoRotate.classList.toggle('active', autoRotate);
     });
 
-    // Drag and Drop STL file support
-    window.addEventListener('dragover', (e) => e.preventDefault());
-    window.addEventListener('drop', (e) => {
-      e.preventDefault();
-      if (e.dataTransfer.files.length > 0) {
-        const file = e.dataTransfer.files[0];
-        if (file.name.toLowerCase().endsWith('.stl')) {
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            const newGeom = loader.parse(evt.target.result);
-            newGeom.computeVertexNormals();
-            newGeom.center();
-            mesh.geometry.dispose();
-            mesh.geometry = newGeom;
-            document.getElementById('model-info').textContent =
-              file.name + ' | ' + (newGeom.attributes.position.count / 3).toLocaleString() + ' Triangles';
-          };
-          reader.readAsArrayBuffer(file);
-        }
-      }
-    });
-
-    // Resize
+    // Window Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
