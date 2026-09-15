@@ -1,0 +1,5 @@
+*.FCBak
+*.FCStd1
+*.tmp
+.DS_Store
+Thumbs.db
