@@ -21,7 +21,7 @@ Experience, compare, and inspect all design versions directly in your browser:
 
 | Version | Teeth Count | Rib Connection | Tip Radius | Best For |
 | :--- | :--- | :--- | :--- | :--- |
-| **6-Teeth Connected (Latest / Recommended)** | **6 Front Teeth** | **100% continuous connection** from front teeth across the base gap to all 6 rear ribs | **R ≈ 1.25 mm** pearl tip | **Maximum skin protection & smooth gliding**. Eliminates skin pinching in the central gap; guarantees hair is smoothly guided into trimmer blades. |
+| **6-Teeth Connected (Latest / Recommended)** | **6 Front Teeth** | **100% continuous connection** from front teeth across the base gap to all 6 rear ribs | **R = 1.25 mm smooth filleted rounding** (no bulbous spheres) | **Maximum skin protection & smooth gliding**. Eliminates skin pinching in the central gap; seamless tangent fillet without bulbous spheres; guarantees hair is smoothly guided into trimmer blades. |
 | **Extra Rounded (Pearl Tip)** | 5 Front Teeth | Disconnected arch / rear bed gap | R ≈ 1.25 mm | Bulbous comfort dome, close body grooming |
 | **Medium Rounded (Bullnose)** | 5 Front Teeth | Disconnected arch / rear bed gap | R ≈ 0.85 mm | Standard beard & hair trimming |
 
@@ -31,9 +31,10 @@ Experience, compare, and inspect all design versions directly in your browser:
 
 ## 📸 3D Renders Comparison
 
-### 6-Teeth Connected (Continuous Ribs + R 1.25mm Pearl Tips)
+### 6-Teeth Connected (Continuous Ribs + Filleted Smooth Rounding)
 ![6-Teeth Connected Top View](images/render_6teeth_top.png)
 ![6-Teeth Connected Isometric](images/render_6teeth_isometric.png)
+![6-Teeth Connected Front](images/render_6teeth_front.png)
 
 ### Extra Rounded (5 Teeth, R ≈ 1.25 mm)
 ![Extra Rounded Isometric](images/render_extra_rounded_full.png)
