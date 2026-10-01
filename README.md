@@ -34,6 +34,7 @@ Experience, compare, and inspect all design versions directly in your browser:
 ### 6-Teeth Connected (Continuous Ribs + Filleted Smooth Rounding)
 ![6-Teeth Connected Top View](images/render_6teeth_top.png)
 ![6-Teeth Connected Isometric](images/render_6teeth_isometric.png)
+![6-Teeth Connected Bottom View](images/render_6teeth_bottom_rot.png)
 ![6-Teeth Connected Front](images/render_6teeth_front.png)
 
 ### Extra Rounded (5 Teeth, R ≈ 1.25 mm)
